@@ -6,13 +6,26 @@ namespace Tron
     public partial class Form1 : Form
     {
         private Nodo[,] matriz;
-        private int gridSize = 23; // Tamaño de la matriz 5x5
+        private Moto moto;
+        private int gridSize = 65; // Tamaño de la matriz 23x23
 
         public Form1()
         {
             InitializeComponent();
             CrearMatriz(gridSize, gridSize);
             DibujarMatriz();
+
+            // Inicializa la moto en una posición específica
+            Casilla posicionInicial = matriz[gridSize / 2, gridSize / 2].Casilla; // Posición central
+            moto = new Moto(posicionInicial, velocidad: 1, tamañoEstela: 3, matriz);
+
+            // Configura la dirección inicial de la moto (por ejemplo, hacia la derecha)
+            moto.Direccion = Direction.Right;
+
+            // Configura el Timer (usa el definido en el designer)
+            timer.Interval = 100; // Intervalo en milisegundos (ajusta según sea necesario)
+            timer.Tick += Timer_Tick;
+            timer.Start();
         }
 
         private void CrearMatriz(int filas, int columnas)
@@ -53,7 +66,9 @@ namespace Tron
 
         private void DibujarMatriz()
         {
-            int casillaSize = 30;
+            int casillaSize = 10; // Ajusta el tamaño si es necesario
+            this.ClientSize = new System.Drawing.Size(gridSize * casillaSize, gridSize * casillaSize);
+
             for (int i = 0; i < gridSize; i++)
             {
                 for (int j = 0; j < gridSize; j++)
@@ -65,6 +80,32 @@ namespace Tron
                     casilla.Top = i * casillaSize;
                     this.Controls.Add(casilla);
                 }
+            }
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            moto.Mover();
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+
+            switch (e.KeyCode)
+            {
+                case Keys.Up:
+                    if (moto.Direccion != Direction.Down) moto.Direccion = Direction.Up;
+                    break;
+                case Keys.Down:
+                    if (moto.Direccion != Direction.Up) moto.Direccion = Direction.Down;
+                    break;
+                case Keys.Left:
+                    if (moto.Direccion != Direction.Right) moto.Direccion = Direction.Left;
+                    break;
+                case Keys.Right:
+                    if (moto.Direccion != Direction.Left) moto.Direccion = Direction.Right;
+                    break;
             }
         }
     }
