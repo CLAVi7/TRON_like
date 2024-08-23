@@ -35,8 +35,8 @@ namespace Tron
 
         public void Mover()
         {
-            if (Combustible <= 0)
-                return; // No mover si no hay combustible
+            //if (Combustible <= 0)
+               // return; // No mover si no hay combustible
 
             // Mueve la moto en la dirección actual
             Casilla nuevaPosicion = ObtenerNuevaPosicion();
@@ -101,12 +101,5 @@ namespace Tron
         }
     }
 
-    public enum Direction
-    {
-        Up,
-        Down,
-        Left,
-        Right
-    }
 }
 
