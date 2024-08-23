@@ -1,0 +1,29 @@
+C:\Users\pariv\OneDrive\Documentos\datos 1\prueba\bin\Debug\net8.0-windows\prueba.exe
+C:\Users\pariv\OneDrive\Documentos\datos 1\prueba\bin\Debug\net8.0-windows\prueba.deps.json
+C:\Users\pariv\OneDrive\Documentos\datos 1\prueba\bin\Debug\net8.0-windows\prueba.runtimeconfig.json
+C:\Users\pariv\OneDrive\Documentos\datos 1\prueba\bin\Debug\net8.0-windows\prueba.dll
+C:\Users\pariv\OneDrive\Documentos\datos 1\prueba\bin\Debug\net8.0-windows\prueba.pdb
+C:\Users\pariv\OneDrive\Documentos\datos 1\prueba\obj\Debug\net8.0-windows\prueba.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\pariv\OneDrive\Documentos\datos 1\prueba\obj\Debug\net8.0-windows\prueba.AssemblyInfoInputs.cache
+C:\Users\pariv\OneDrive\Documentos\datos 1\prueba\obj\Debug\net8.0-windows\prueba.AssemblyInfo.cs
+C:\Users\pariv\OneDrive\Documentos\datos 1\prueba\obj\Debug\net8.0-windows\prueba.csproj.CoreCompileInputs.cache
+C:\Users\pariv\OneDrive\Documentos\datos 1\prueba\obj\Debug\net8.0-windows\prueba.dll
+C:\Users\pariv\OneDrive\Documentos\datos 1\prueba\obj\Debug\net8.0-windows\refint\prueba.dll
+C:\Users\pariv\OneDrive\Documentos\datos 1\prueba\obj\Debug\net8.0-windows\prueba.pdb
+C:\Users\pariv\OneDrive\Documentos\datos 1\prueba\obj\Debug\net8.0-windows\prueba.genruntimeconfig.cache
+C:\Users\pariv\OneDrive\Documentos\datos 1\prueba\obj\Debug\net8.0-windows\ref\prueba.dll
+C:\Users\pariv\OneDrive\Documentos\GitHub\TRON_like\bin\Debug\net8.0-windows\prueba.exe
+C:\Users\pariv\OneDrive\Documentos\GitHub\TRON_like\bin\Debug\net8.0-windows\prueba.deps.json
+C:\Users\pariv\OneDrive\Documentos\GitHub\TRON_like\bin\Debug\net8.0-windows\prueba.runtimeconfig.json
+C:\Users\pariv\OneDrive\Documentos\GitHub\TRON_like\bin\Debug\net8.0-windows\prueba.dll
+C:\Users\pariv\OneDrive\Documentos\GitHub\TRON_like\bin\Debug\net8.0-windows\prueba.pdb
+C:\Users\pariv\OneDrive\Documentos\GitHub\TRON_like\obj\Debug\net8.0-windows\prueba.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\pariv\OneDrive\Documentos\GitHub\TRON_like\obj\Debug\net8.0-windows\prueba.AssemblyInfoInputs.cache
+C:\Users\pariv\OneDrive\Documentos\GitHub\TRON_like\obj\Debug\net8.0-windows\prueba.AssemblyInfo.cs
+C:\Users\pariv\OneDrive\Documentos\GitHub\TRON_like\obj\Debug\net8.0-windows\prueba.csproj.CoreCompileInputs.cache
+C:\Users\pariv\OneDrive\Documentos\GitHub\TRON_like\obj\Debug\net8.0-windows\prueba.sourcelink.json
+C:\Users\pariv\OneDrive\Documentos\GitHub\TRON_like\obj\Debug\net8.0-windows\prueba.dll
+C:\Users\pariv\OneDrive\Documentos\GitHub\TRON_like\obj\Debug\net8.0-windows\refint\prueba.dll
+C:\Users\pariv\OneDrive\Documentos\GitHub\TRON_like\obj\Debug\net8.0-windows\prueba.pdb
+C:\Users\pariv\OneDrive\Documentos\GitHub\TRON_like\obj\Debug\net8.0-windows\prueba.genruntimeconfig.cache
+C:\Users\pariv\OneDrive\Documentos\GitHub\TRON_like\obj\Debug\net8.0-windows\ref\prueba.dll
