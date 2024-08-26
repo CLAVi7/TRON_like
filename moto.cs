@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -6,7 +7,7 @@ namespace Tron
 {
     public class Moto
     {
-        public int Velocidad { get; set; }
+        public int Velocidad { get; set; } 
         public int TamañoEstela { get; set; }
         public int Combustible { get; set; }
         public List<string> Items { get; set; }
@@ -17,10 +18,13 @@ namespace Tron
         public LinkedListNode<Casilla> Head { get; private set; }
         private Form1 form;
         private bool juegoTerminado;
+        private static Random random = new Random(); // Instancia de Random para generar números aleatorios
 
-        public Moto(Casilla posicionInicial, int velocidad, int tamañoEstela, Nodo[,] matriz, Form1 form)
+        public Moto(Casilla posicionInicial, int tamañoEstela, Nodo[,] matriz, Form1 form)
         {
-            Velocidad = velocidad;
+            // Asignar una velocidad aleatoria entre 1 y 10
+            Velocidad = random.Next(1, 4); // 11 es excluyente, así que el rango es [1, 10]
+
             TamañoEstela = tamañoEstela;
             Combustible = 100;
             Items = new List<string>();
@@ -34,6 +38,7 @@ namespace Tron
             Head = Estela.AddFirst(posicionInicial);
             Head.Value.BackColor = Color.Red; // Color de la moto
             Direccion = Direction.Right; // Dirección inicial
+           
         }
 
         public void Mover()
@@ -58,11 +63,11 @@ namespace Tron
                 Estela.AddFirst(nuevaPosicion);
                 nuevaPosicion.BackColor = Color.Red; // Color de la moto
 
-                // Actualizar el `Head`
+                // Actualizar el Head
                 Head = Estela.First;
 
-                // Si la estela es más larga que el tamaño permitido, eliminar el último nodo
-                if (Estela.Count > TamañoEstela)
+                // Eliminar el último nodo solo si la estela es más larga que el tamaño permitido
+                while (Estela.Count > TamañoEstela)
                 {
                     LinkedListNode<Casilla> nodoAntiguo = Estela.Last;
                     Estela.RemoveLast();
@@ -82,28 +87,36 @@ namespace Tron
             }
         }
 
+
         private Casilla ObtenerNuevaPosicion()
         {
             int x = Head.Value.Left / 10; // Tamaño de la casilla (ajustar según sea necesario)
             int y = Head.Value.Top / 10;
 
-            switch (Direccion)
+            for (int i = 0; i < Velocidad; i++)
             {
-                case Direction.Up: y--; break;
-                case Direction.Down: y++; break;
-                case Direction.Left: x--; break;
-                case Direction.Right: x++; break;
+                switch (Direccion)
+                {
+                    case Direction.Up: y--; break;
+                    case Direction.Down: y++; break;
+                    case Direction.Left: x--; break;
+                    case Direction.Right: x++; break;
+                }
+                if (x < 0 || x >= Matriz.GetLength(1) || y < 0 || y >= Matriz.GetLength(0)) // Verificar límites del grid
+                {
+                    return null;
+                }
+                Casilla nuevaPosicion = Matriz[y, x].Casilla;
+                if (nuevaPosicion is Pared)
+                {
+                    return nuevaPosicion;
+                }
             }
-
-            // Verificar límites del grid
-            if (x < 0 || x >= Matriz.GetLength(1) || y < 0 || y >= Matriz.GetLength(0))
-            {
-                return null;
-            }
-
+    
             return Matriz[y, x].Casilla; // Obtener la nueva casilla
         }
     }
 }
+
 
 

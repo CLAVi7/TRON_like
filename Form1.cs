@@ -4,7 +4,8 @@ using System.Windows.Forms;
 namespace Tron
 {
 public partial class Form1 : Form
-{
+{   
+    private Label velocidadLabel;
     private Nodo[,] matriz;
     private Moto moto;
     private int gridSize = 65; // Tamaño de la matriz 65x65
@@ -18,15 +19,17 @@ public partial class Form1 : Form
 
         // Inicializa la moto en una posición específica
         Casilla posicionInicial = matriz[4, 6].Casilla; // Posición central
-        moto = new Moto(posicionInicial, velocidad: 1, tamañoEstela: 4, matriz, this); // Pasar 'this'
+        moto = new Moto(posicionInicial, tamañoEstela: 4, matriz, this); // Pasar 'this'
 
         // Configura la dirección inicial de la moto (por ejemplo, hacia la derecha)
         moto.Direccion = Direction.Right;
+        
 
-        // Configura el Timer (usa el definido en el designer)
-        timer.Interval = 100; // Intervalo en milisegundos (ajusta según sea necesario)
+        // Configura el Timer 
+        timer.Interval = 1000 / moto.Velocidad; // Intervalo en milisegundos (ajusta según sea necesario)
         timer.Tick += Timer_Tick;
         timer.Start();
+        
     }
 
     private void Timer_Tick(object sender, EventArgs e)
@@ -34,6 +37,7 @@ public partial class Form1 : Form
         if (!juegoTerminado)
         {
             moto.Mover();
+            
         }
     }
 
@@ -75,7 +79,7 @@ public partial class Form1 : Form
 
     private void DibujarMatriz()
     {
-        int casillaSize = 10; // Ajusta el tamaño si es necesario
+        int casillaSize = 10; 
         this.ClientSize = new System.Drawing.Size(gridSize * casillaSize, gridSize * casillaSize);
 
         for (int i = 0; i < gridSize; i++)

@@ -13,7 +13,7 @@
 
             // Otros componentes del formulario
             this.SuspendLayout();
-            this.ClientSize = new System.Drawing.Size(800, 600); // Ajusta el tamaño del formulario según sea necesario
+            this.ClientSize = new System.Drawing.Size(1000, 1000); // Ajusta el tamaño del formulario según sea necesario
             this.Name = "Form1";
             this.ResumeLayout(false);
         }
