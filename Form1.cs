@@ -5,7 +5,7 @@ namespace Tron
 {
 public partial class Form1 : Form
 {   
-    private Label velocidadLabel;
+    public Label CombustibleLabel { get; private set; }
     private Nodo[,] matriz;
     private Moto moto;
     private int gridSize = 65; // Tamaño de la matriz 65x65
@@ -13,22 +13,37 @@ public partial class Form1 : Form
 
     public Form1()
     {
-        InitializeComponent();
-        CrearMatriz(gridSize, gridSize);
-        DibujarMatriz();
+    InitializeComponent();
+    
+    // Configura el tamaño del formulario
+    // Ajusta el tamaño según tus necesidades
 
-        // Inicializa la moto en una posición específica
-        Casilla posicionInicial = matriz[4, 6].Casilla; // Posición central
-        moto = new Moto(posicionInicial, tamañoEstela: 4, matriz, this); // Pasar 'this'
+    // Inicializa y agrega el Label
+    CombustibleLabel = new Label();
+    CombustibleLabel.AutoSize = true;
+    CombustibleLabel.Location = new System.Drawing.Point(1000, 10); // Ajusta la posición según sea necesario
+    CombustibleLabel.Text = "Combustible: 100"; // Texto inicial
+    this.Controls.Add(CombustibleLabel);
 
-        // Configura la dirección inicial de la moto (por ejemplo, hacia la derecha)
-        moto.Direccion = Direction.Right;
-        
+    CrearMatriz(gridSize, gridSize);
+    DibujarMatriz();
 
-        // Configura el Timer 
-        timer.Interval = 1000 / moto.Velocidad; // Intervalo en milisegundos (ajusta según sea necesario)
-        timer.Tick += Timer_Tick;
-        timer.Start();
+    // Inicializa la moto en una posición específica
+    Casilla posicionInicial = matriz[4, 6].Casilla; // Posición central
+    moto = new Moto(posicionInicial, tamañoEstela: 4, matriz, this); // Pasar 'this'
+
+    // Configura la dirección inicial de la moto (por ejemplo, hacia la derecha)
+    moto.Direccion = Direction.Right;
+
+    
+    
+
+    // Configura el Timer 
+    
+    timer.Interval = 600 / moto.Velocidad; // Intervalo en milisegundos (ajusta según sea necesario)
+    timer.Tick += Timer_Tick;
+    timer.Start();
+    this.ClientSize = new System.Drawing.Size(1200, 700);
         
     }
 

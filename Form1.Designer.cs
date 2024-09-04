@@ -7,13 +7,14 @@
 
         private void InitializeComponent()
         {
+            
             this.timer = new System.Windows.Forms.Timer();
             this.timer.Interval = 100; // Intervalo en milisegundos
             this.timer.Tick += new System.EventHandler(this.Timer_Tick);
 
             // Otros componentes del formulario
             this.SuspendLayout();
-            this.ClientSize = new System.Drawing.Size(1000, 1000); // Ajusta el tamaño del formulario según sea necesario
+            
             this.Name = "Form1";
             this.ResumeLayout(false);
         }

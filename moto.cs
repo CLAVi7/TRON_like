@@ -8,6 +8,7 @@ namespace Tron
     public class Moto
     {
         public int Velocidad { get; set; } 
+        
         public int TamañoEstela { get; set; }
         public int Combustible { get; set; }
         public List<string> Items { get; set; }
@@ -19,12 +20,13 @@ namespace Tron
         private Form1 form;
         private bool juegoTerminado;
         private static Random random = new Random(); // Instancia de Random para generar números aleatorios
+        private int contadorMovimiento;
 
         public Moto(Casilla posicionInicial, int tamañoEstela, Nodo[,] matriz, Form1 form)
         {
             // Asignar una velocidad aleatoria entre 1 y 10
-            Velocidad = random.Next(1, 4); // 11 es excluyente, así que el rango es [1, 10]
-
+            Velocidad = random.Next(1, 2); // 11 es excluyente, así que el rango es [1, 10]
+            contadorMovimiento = 0;
             TamañoEstela = tamañoEstela;
             Combustible = 100;
             Items = new List<string>();
@@ -48,6 +50,20 @@ namespace Tron
 
             // Mueve la moto en la dirección actual
             Casilla nuevaPosicion = ObtenerNuevaPosicion();
+            contadorMovimiento++;
+            if (contadorMovimiento >= 5)
+            {
+                Combustible--;
+                contadorMovimiento = 0; // Reiniciar el contador
+                form.CombustibleLabel.Text = $"Combustible: {Combustible}";
+            }
+
+            if (Combustible<=0)
+            {
+                form.DetenerJuego(); // Detener el juego
+                juegoTerminado = true; // Actualizar el estado del juego
+                return;
+            }
 
             if (nuevaPosicion is Pared)
             {
