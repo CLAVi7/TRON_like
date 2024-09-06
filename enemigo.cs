@@ -2,22 +2,52 @@ namespace Tron
 {
     public class Enemigo : Moto
     {
-        private Direction direccionMovimiento; // Dirección en la que se moverá el enemigo
+        private Direction direccionActual;
+        private System.Windows.Forms.Timer temporizadorCambioDireccion;
 
-        public Enemigo(Casilla posicionInicial, int tamañoEstela, Nodo[,] matriz, Form1 form, Direction direccionMovimiento)
-            : base(posicionInicial, tamañoEstela, matriz, form)
+        public Enemigo(Casilla posicionInicial, int tamañoEstela, Nodo[,] matriz, Form1 form, Direction direccionInicial)
+            : base(posicionInicial, tamañoEstela, matriz, form, false)
         {
-            this.direccionMovimiento = direccionMovimiento; // Asignar la dirección inicial del enemigo
+            this.direccionActual = direccionInicial; // Asignar la dirección inicial del enemigo
+            CambiarDireccionAleatoria();
+
+            // Configurar el temporizador para cambiar de dirección cada 3 segundos
+            temporizadorCambioDireccion = new System.Windows.Forms.Timer();
+            temporizadorCambioDireccion.Interval = 3000; // 3 segundos
+            temporizadorCambioDireccion.Tick += (s, e) => CambiarDireccionAleatoria();
+            temporizadorCambioDireccion.Start();
         }
 
-        public override void Mover()
+        private void CambiarDireccionAleatoria()
+        {
+            Random random = new Random();
+            Direction nuevaDireccion;
+
+            do
+            {
+                nuevaDireccion = (Direction)random.Next(0, 4); // Elegir una dirección aleatoria
+            }
+            while (EsDireccionOpuesta(nuevaDireccion)); // Asegurar que no sea la dirección opuesta
+
+            direccionActual = nuevaDireccion;
+        }
+
+        private bool EsDireccionOpuesta(Direction nuevaDireccion)
+        {
+            return (direccionActual == Direction.Up && nuevaDireccion == Direction.Down) ||
+                   (direccionActual == Direction.Down && nuevaDireccion == Direction.Up) ||
+                   (direccionActual == Direction.Left && nuevaDireccion == Direction.Right) ||
+                   (direccionActual == Direction.Right && nuevaDireccion == Direction.Left);
+        }
+
+        public override void Mover(List<Moto> motos)
         {
             if (juegoTerminado)
                 return; // No hacer nada si el juego ya terminó
 
             // Obtener la nueva posición en función de la dirección del enemigo
             Casilla nuevaPosicion = ObtenerNuevaPosicion();
-            
+
             // Manejar el combustible como la moto normal
             contadorMovimiento++;
             if (contadorMovimiento >= 5)
@@ -29,40 +59,33 @@ namespace Tron
 
             if (Combustible <= 0)
             {
-                EliminarEnemigo(); // Llamar al método para eliminar el enemigo
-                return;//logica para eliminar al enemigo
+                EliminarEnemigo(); // Eliminar el enemigo si se queda sin combustible
+                return;
             }
 
             // Si la nueva posición es inválida (fuera de límites o colisión con pared)
             if (nuevaPosicion == null || nuevaPosicion is Pared)
             {
-                EliminarEnemigo(); // Llamar al método para eliminar el enemigo
-                return; //logica para eliminar al enemigo
-                
+                EliminarEnemigo(); // Eliminar si choca con una pared
+                return;
             }
 
-            // Si la nueva posición es un ítem, manejar la recogida del ítem
+            // Si la nueva posición es un ítem
             if (nuevaPosicion is Item item)
             {
                 nuevaPosicion.BackColor = Color.Black;
                 item.Aplicar(this, Matriz); // Aplicar el efecto del ítem
-                item.EliminarYRestaurarColor(form, Matriz); // Eliminar y restaurar el color del ítem
-                nuevaPosicion = ObtenerNuevaPosicion(); // Avanzar a la siguiente posición después del ítem
-                if (nuevaPosicion == null || nuevaPosicion is Pared)
-                {
-                    EliminarEnemigo(); // Llamar al método para eliminar el enemigo
-                    return;
-                }
+                item.EliminarYRestaurarColor(form, Matriz); // Eliminar el ítem y restaurar color
             }
 
-            // Mover el enemigo en la dirección actual
+            // Mover el enemigo
             Estela.AddFirst(nuevaPosicion);
             nuevaPosicion.BackColor = Color.Magenta; // Color del enemigo
 
             // Actualizar el Head
             Head = Estela.First;
 
-            // Eliminar el último nodo solo si la estela es más larga que el tamaño permitido
+            // Limitar la longitud de la estela
             while (Estela.Count > TamañoEstela)
             {
                 LinkedListNode<Casilla> nodoAntiguo = Estela.Last;
@@ -70,7 +93,7 @@ namespace Tron
                 nodoAntiguo.Value.BackColor = Color.Black; // Restaurar el color anterior
             }
 
-            // Cambiar el color de la estela (los nodos que no son el enemigo)
+            // Colorear la estela
             foreach (var nodo in Estela)
             {
                 if (nodo != Head.Value)
@@ -79,18 +102,31 @@ namespace Tron
                 }
             }
 
-            // El enemigo se mueve en la dirección establecida
-            Direccion = direccionMovimiento;
+            // Mover en la dirección actual
+            switch (direccionActual)
+            {
+                case Direction.Up:
+                    // Lógica para mover hacia arriba
+                    break;
+                case Direction.Down:
+                    // Lógica para mover hacia abajo
+                    break;
+                case Direction.Left:
+                    // Lógica para mover hacia la izquierda
+                    break;
+                case Direction.Right:
+                    // Lógica para mover hacia la derecha
+                    break;
+            }
         }
-        
-        
+
         private Casilla ObtenerNuevaPosicion()
         {
-            int x = Head.Value.Left / 10; // Tamaño de la casilla (ajustar según sea necesario)
+            int x = Head.Value.Left / 10; // Ajusta según el tamaño de la casilla
             int y = Head.Value.Top / 10;
 
-            // Calcular la nueva posición en función de la dirección y la velocidad
-            switch (Direccion)
+            // Calcular la nueva posición en función de la dirección
+            switch (direccionActual)
             {
                 case Direction.Up: y--; break;
                 case Direction.Down: y++; break;
@@ -98,31 +134,25 @@ namespace Tron
                 case Direction.Right: x++; break;
             }
 
-            if (x < 0 || x >= Matriz.GetLength(1) || y < 0 || y >= Matriz.GetLength(0)) // Verificar límites del grid
+            // Verificar límites
+            if (x < 0 || x >= Matriz.GetLength(1) || y < 0 || y >= Matriz.GetLength(0))
             {
-                return null;
+                return null; // Posición inválida
             }
-            
-            Casilla nuevaPosicion = Matriz[y, x].Casilla;
-            
-            if (nuevaPosicion is Item)
-            {
-                return nuevaPosicion;
-            }
-            return nuevaPosicion;
+
+            return Matriz[y, x].Casilla;
         }
+
         private void EliminarEnemigo()
         {
-            // Restaurar el color de las casillas ocupadas por el enemigo
             foreach (var nodo in Estela)
             {
-                nodo.BackColor = Color.Black; // Restaurar el color anterior
+                nodo.BackColor = Color.Black; // Restaurar el color de las casillas
             }
 
-            
-            
-
-            // Opcional: Si usas una lista de enemigos en Form1, también debes remover el enemigo de allí
+            temporizadorCambioDireccion.Stop(); // Detener el temporizador
         }
     }
+    
+    
 }

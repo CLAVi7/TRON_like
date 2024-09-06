@@ -23,8 +23,9 @@ namespace Tron
         public bool juegoTerminado;
         private static Random random = new Random(); // Instancia de Random para generar números aleatorios
         public int contadorMovimiento;
+        protected bool esJugador;
 
-        public Moto(Casilla posicionInicial, int tamañoEstela, Nodo[,] matriz, Form1 form)
+        public Moto(Casilla posicionInicial, int tamañoEstela, Nodo[,] matriz, Form1 form, bool esJugador)
         {
             // Asignar una velocidad aleatoria entre 1 y 10
             Velocidad = random.Next(1, 2); // 11 es excluyente, así que el rango es [1, 10]
@@ -37,6 +38,7 @@ namespace Tron
             Matriz = matriz;
             this.form = form; // Asignar el formulario
             juegoTerminado = false;
+            
 
             // Inicializar la moto en la posición inicial
             Head = Estela.AddFirst(posicionInicial);
@@ -47,8 +49,25 @@ namespace Tron
             itemTimer.Tick += AplicarSiguienteItem;
            
         }
+        public bool DetectarColisionConEstela(Casilla nuevaPosicion, List<Moto> motos)
+        {
+            foreach (var otraMoto in motos)
+            {
+                if (otraMoto == this)
+                    continue;
 
-        public virtual void Mover()
+                foreach (var nodoEstela in otraMoto.Estela)
+                {
+                    if (nodoEstela == nuevaPosicion)
+                    {
+                        return true; // Colisión detectada
+                    }
+                }
+            }
+            return false; // No hay colisión
+        }
+
+        public virtual void Mover(List<Moto> motos)
         {
             if (juegoTerminado)
                 return; // No hacer nada si el juego ya terminó
@@ -69,6 +88,22 @@ namespace Tron
                 juegoTerminado = true; // Actualizar el estado del juego
                 return;
             }
+            if (DetectarColisionConEstela(nuevaPosicion, motos))
+            {
+                if (esJugador)
+                {
+                    form.DetenerJuego();
+                    juegoTerminado = true; // Actualizar el estado del juego
+                    return;
+                }
+                else
+                {
+                    form.DetenerJuego();
+                    juegoTerminado = true; // Actualizar el estado del juego
+                    return;
+                }
+            
+            }
 
             // Si la nueva posición es inválida (fuera de límites o colisión con pared)
             if (nuevaPosicion == null || nuevaPosicion is Pared)
@@ -85,7 +120,7 @@ namespace Tron
                 AgregarItem(item);  // Aplicar el efecto del ítem
                 // Limpiar la casilla del grid donde estaba el ítem
                  // Restaurar el color original de la casilla
-
+                item.EliminarYRestaurarColor(form, Matriz);
                 // Avanzar a la siguiente posición después del ítem
                 nuevaPosicion = ObtenerNuevaPosicion();
                 if (nuevaPosicion == null || nuevaPosicion is Pared)
@@ -185,7 +220,19 @@ namespace Tron
                     }
                 }
             }
+            private void EliminarEnemigo()
+        {
+            foreach (var nodo in Estela)
+            {
+                nodo.BackColor = Color.Black; // Restaurar el color de las casillas
+            }
+
+            
         }
+        }
+        
+        
+        
 }
 
 
