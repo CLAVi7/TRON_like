@@ -18,11 +18,11 @@ namespace Tron
         public LinkedList<Casilla> Estela { get; set; }
         public Direction Direccion { get; set; }
         public Nodo[,] Matriz { get; set; }
-        public LinkedListNode<Casilla> Head { get; private set; }
-        private Form1 form;
-        private bool juegoTerminado;
+        public LinkedListNode<Casilla> Head { get; set; }
+        public Form1 form;
+        public bool juegoTerminado;
         private static Random random = new Random(); // Instancia de Random para generar números aleatorios
-        private int contadorMovimiento;
+        public int contadorMovimiento;
 
         public Moto(Casilla posicionInicial, int tamañoEstela, Nodo[,] matriz, Form1 form)
         {
@@ -48,13 +48,27 @@ namespace Tron
            
         }
 
-        public void Mover()
+        public virtual void Mover()
         {
             if (juegoTerminado)
                 return; // No hacer nada si el juego ya terminó
 
             // Obtener la nueva posición en función de la dirección
             Casilla nuevaPosicion = ObtenerNuevaPosicion();
+            contadorMovimiento++;
+            if (contadorMovimiento >= 5)
+            {
+                Combustible--;
+                contadorMovimiento = 0; // Reiniciar el contador
+                form.CombustibleLabel.Text = $"Combustible: {Combustible}";
+            }
+
+            if (Combustible <= 0)
+            {
+                form.DetenerJuego(); // Detener el juego
+                juegoTerminado = true; // Actualizar el estado del juego
+                return;
+            }
 
             // Si la nueva posición es inválida (fuera de límites o colisión con pared)
             if (nuevaPosicion == null || nuevaPosicion is Pared)
@@ -68,7 +82,7 @@ namespace Tron
             if (nuevaPosicion is Item item)
             {
                 nuevaPosicion.BackColor = Color.Black;
-                item.Aplicar(this); // Aplicar el efecto del ítem
+                AgregarItem(item);  // Aplicar el efecto del ítem
                 // Limpiar la casilla del grid donde estaba el ítem
                  // Restaurar el color original de la casilla
 
@@ -111,7 +125,7 @@ namespace Tron
             if (Items.Count > 0)
             {
                 Item itemEnCola = Items.Dequeue(); // Renombrar aquí para evitar conflicto
-                itemEnCola.Aplicar(this);
+                itemEnCola.Aplicar(this, Matriz);
             }
         }
 
@@ -160,7 +174,7 @@ namespace Tron
                 if (Items.Count > 0)
                 {
                     Item item = Items.Dequeue();
-                    item.Aplicar(this);
+                    item.Aplicar(this, Matriz);
 
                     // Actualiza el label o realiza otras acciones necesarias
 

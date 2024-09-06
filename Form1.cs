@@ -16,6 +16,7 @@ namespace Tron
         private System.Windows.Forms.Timer itemTimer; // Temporizador para la generación de items
         private Queue<Item> items = new Queue<Item>(); // Cola de items
         private Random random = new Random();
+        private Enemigo enemigo;
 
         public Form1()
         {
@@ -34,6 +35,10 @@ namespace Tron
             // Inicializa la moto en una posición específica
             Casilla posicionInicial = matriz[4, 6].Casilla; // Posición central
             moto = new Moto(posicionInicial, tamañoEstela: 4, matriz, this); // Pasar 'this'
+
+            Casilla posicionInicialE = matriz[20, 20].Casilla;
+            enemigo = new Enemigo(posicionInicialE, tamañoEstela: 4, matriz, this, Direction.Right);
+
 
             // Configura la dirección inicial de la moto (por ejemplo, hacia la derecha)
             moto.Direccion = Direction.Right;
@@ -58,6 +63,7 @@ namespace Tron
             if (!juegoTerminado)
             {
                 moto.Mover();
+                enemigo.Mover();
             }
         }
 
@@ -160,6 +166,7 @@ namespace Tron
             // Coloca el item en el grid y añade a la cola
             ColocarItemEnGrid(x, y, itemAleatorio);
             items.Enqueue(itemAleatorio);
+            
         }
 
         private void ColocarItemEnGrid(int x, int y, Item item)
@@ -167,7 +174,9 @@ namespace Tron
             // Primero limpia la casilla donde se va a colocar el item, para asegurarse de que no esté oculta
             if (matriz[x, y].Casilla is Libre)
             {
-                
+                item.X = x;
+                item.Y = y;
+
                 item.Color = GetColorParaItem(item);
                 matriz[x, y].Casilla.BackColor = item.Color; 
                 // Coloca el item en la posición (x, y) del grid
@@ -177,8 +186,10 @@ namespace Tron
                 item.Left = x * 10;
                 item.Top = y * 10;
                 this.Controls.Add(item);
+                
+                this.Invalidate(); 
             }
-
+            
         }
 
 
@@ -189,6 +200,7 @@ namespace Tron
             if (item is Bomba) return Color.Red;
             return Color.Transparent;
         }
+        
 
         
         // Método para detener el juego
