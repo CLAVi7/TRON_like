@@ -18,6 +18,7 @@ namespace Tron
         private Random random = new Random();
         private Enemigo enemigo;
         private List<Moto> todasLasMotos;
+        private List<Moto> todoslosenemigos;
 
         public Form1()
         {
@@ -33,10 +34,11 @@ namespace Tron
             CrearMatriz(gridSize, gridSize);
             DibujarMatriz();
             todasLasMotos = new List<Moto>();
+            todoslosenemigos = new List<Moto>();
 
             // Inicializa la moto en una posición específica
             Casilla posicionInicial = matriz[4, 6].Casilla; // Posición central
-            moto = new Moto(posicionInicial, tamañoEstela: 4, matriz, this, true); // Pasar 'this'
+            moto = new Moto(posicionInicial, tamañoEstela: 20, matriz, this, true); // Pasar 'this'
 
             Casilla posicionInicialE = matriz[10, 6].Casilla;
             enemigo = new Enemigo(posicionInicialE, tamañoEstela: 4, matriz, this, Direction.Right);
@@ -45,7 +47,7 @@ namespace Tron
             // Configura la dirección inicial de la moto (por ejemplo, hacia la derecha)
             moto.Direccion = Direction.Right;
             todasLasMotos.Add(moto);
-            todasLasMotos.Add(enemigo);
+            todoslosenemigos.Add(enemigo);
 
             // Configura el Timer para el movimiento de la moto
             timer = new System.Windows.Forms.Timer();
@@ -66,11 +68,26 @@ namespace Tron
         {
             if (!juegoTerminado)
             {
-                moto.Mover( todasLasMotos);
-                enemigo.Mover( todasLasMotos);
-                
+                moto.Mover(todasLasMotos);
+                foreach (var enemigo in todoslosenemigos.ToList()) // Utiliza una copia de la lista para evitar problemas de modificación durante la iteración
+                {
+                    enemigo.Mover(todasLasMotos);
+                }
+
+                // Eliminar enemigos que no están vivos
+                foreach (var enemigo in todoslosenemigos.ToList())
+                {
+                    if (!enemigo.IsAlive)
+                    {
+                        EliminarEnemigo(enemigo);
+                    }
+                }
+
+                // Redibujar el formulario
+                this.Invalidate();
             }
         }
+
         
 
         private void CrearMatriz(int filas, int columnas)
@@ -157,9 +174,9 @@ namespace Tron
             // Lista de items disponibles
             List<Item> itemsDisponibles = new List<Item>
             {
-                new CeldaCombustible(),
-                new CrecimientoEstela(),
-                new Bomba()
+                new CeldaCombustible(this),
+                new CrecimientoEstela(this),
+                new Bomba(this)
             };
 
             // Selecciona una posición aleatoria en el grid
@@ -217,6 +234,16 @@ namespace Tron
             itemTimer.Stop(); // Detener el temporizador de items
             MessageBox.Show("¡Perdiste!", "Fin del Juego", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
+        public void EliminarEnemigo(Moto enemigo)
+        {
+            // Remover el enemigo de la lista de enemigos
+            if (todoslosenemigos.Contains(enemigo))
+            {
+                todoslosenemigos.Remove(enemigo);
+                this.Controls.Remove(enemigo.Head.Value); // Remover la casilla del enemigo del formulario
+            }
+        }
+
         
     }
 }

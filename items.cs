@@ -5,8 +5,14 @@ public abstract class Item : Casilla
     public abstract void Aplicar(Moto moto, Nodo[,] matriz);
     public Color Color { get; set; }
     public bool Usado { get; set; } = false;
+    public Form1 form;
     public int X {get; set;}
     public int Y { get; set; }
+
+    public Item(Form1 form)
+    {
+        this.form = form;
+    }
 
     public void EliminarYRestaurarColor(Form1 form, Nodo[,] matriz)
     {
@@ -31,14 +37,15 @@ public class CeldaCombustible : Item
 {
     public int Cantidad { get; set; }
     private static Random random = new Random();
-    
+
+    public CeldaCombustible(Form1 form) : base(form) { }
+
     public override void Aplicar(Moto moto, Nodo[,] matriz)
     {
         Cantidad = random.Next(40, 100);
         moto.Combustible += Cantidad;
-        Usado=true;
+        Usado = true;
         EliminarYRestaurarColor(moto.form, matriz);
-        
     }
 }
 
@@ -47,21 +54,26 @@ public class CrecimientoEstela : Item
     public int Incremento { get; set; }
     private static Random random = new Random();
 
+    public CrecimientoEstela(Form1 form) : base(form) { }
+
     public override void Aplicar(Moto moto, Nodo[,] matriz)
     {
         Incremento = random.Next(2, 11);
         moto.TamañoEstela += Incremento;
-        Usado=true;
+        Usado = true;
         EliminarYRestaurarColor(moto.form, matriz);
     }
 }
 
 public class Bomba : Item
 {
+    public Bomba(Form1 form) : base(form) { }
+
     public override void Aplicar(Moto moto, Nodo[,] matriz)
     {
         // Lógica para explosion
-        Usado=true;
+        form.DetenerJuego(); // Asegúrate de que form no sea null aquí
+        Usado = true;
         EliminarYRestaurarColor(moto.form, matriz);
     }
 }

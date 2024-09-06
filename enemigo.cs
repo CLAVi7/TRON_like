@@ -4,19 +4,40 @@ namespace Tron
     {
         private Direction direccionActual;
         private System.Windows.Forms.Timer temporizadorCambioDireccion;
+        public bool IsAlive;
+        
 
         public Enemigo(Casilla posicionInicial, int tamañoEstela, Nodo[,] matriz, Form1 form, Direction direccionInicial)
             : base(posicionInicial, tamañoEstela, matriz, form, false)
         {
             this.direccionActual = direccionInicial; // Asignar la dirección inicial del enemigo
             CambiarDireccionAleatoria();
+            IsAlive=true;
 
             // Configurar el temporizador para cambiar de dirección cada 3 segundos
             temporizadorCambioDireccion = new System.Windows.Forms.Timer();
-            temporizadorCambioDireccion.Interval = 3000; // 3 segundos
+            temporizadorCambioDireccion.Interval = 30000000; // 3 segundos
             temporizadorCambioDireccion.Tick += (s, e) => CambiarDireccionAleatoria();
             temporizadorCambioDireccion.Start();
         }
+        public bool DetectarColisionConEstela(Casilla nuevaPosicion, List<Moto> motos)
+        {
+            foreach (var otraMoto in motos)
+            {
+                if (otraMoto == this)
+                    continue;
+
+                foreach (var nodoEstela in otraMoto.Estela)
+                {
+                    if (nodoEstela == nuevaPosicion)
+                    {
+                        return true; // Colisión detectada
+                    }
+                }
+            }
+            return false; // No hay colisión
+        }
+
 
         private void CambiarDireccionAleatoria()
         {
@@ -50,6 +71,16 @@ namespace Tron
 
             // Manejar el combustible como la moto normal
             contadorMovimiento++;
+            if (DetectarColisionConEstela(nuevaPosicion, motos))
+            {
+                // Si colisiona con la estela, eliminar al enemigo
+                if (!esJugador)
+                {
+                    EliminarEnemigo();
+                }
+                return;
+            }
+
             if (contadorMovimiento >= 5)
             {
                 Combustible--;
@@ -143,15 +174,36 @@ namespace Tron
             return Matriz[y, x].Casilla;
         }
 
-        private void EliminarEnemigo()
+        public void EliminarEnemigo()
         {
-            foreach (var nodo in Estela)
+            
+            IsAlive=false;
+            // Eliminar el enemigo de la lista de enemigos en el formulario
+            if (form != null)
             {
-                nodo.BackColor = Color.Black; // Restaurar el color de las casillas
+                form.EliminarEnemigo(this);
             }
 
-            temporizadorCambioDireccion.Stop(); // Detener el temporizador
+            // Eliminar el enemigo del grid
+            if (Head != null)
+            {
+                Head.Value.BackColor = Color.Black; // Restaurar el color de la casilla en el grid
+            }
+
+            // Limpiar la estela
+            while (Estela.Count > 0)
+            {
+                var nodoAntiguo = Estela.Last;
+                Estela.RemoveLast();
+                nodoAntiguo.Value.BackColor = Color.Black; // Restaurar el color de la casilla en el grid
+            }
+            
+            // Eliminar el enemigo de la memoria
+            Estela = null;
+            Head = null;
+            form = null;
         }
+
     }
     
     

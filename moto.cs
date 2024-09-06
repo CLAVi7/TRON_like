@@ -24,6 +24,7 @@ namespace Tron
         private static Random random = new Random(); // Instancia de Random para generar números aleatorios
         public int contadorMovimiento;
         protected bool esJugador;
+        public bool IsAlive;
 
         public Moto(Casilla posicionInicial, int tamañoEstela, Nodo[,] matriz, Form1 form, bool esJugador)
         {
@@ -32,6 +33,7 @@ namespace Tron
             contadorMovimiento = 0;
             TamañoEstela = tamañoEstela;
             Combustible = 100;
+            IsAlive=true;
             
             Poderes = new List<string>();
             Estela = new LinkedList<Casilla>();
@@ -234,5 +236,4 @@ namespace Tron
         
         
 }
-
 
