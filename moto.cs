@@ -29,7 +29,7 @@ namespace Tron
         public Moto(Casilla posicionInicial, int tamañoEstela, Nodo[,] matriz, Form1 form, bool esJugador)
         {
             // Asignar una velocidad aleatoria entre 1 y 10
-            Velocidad = random.Next(1, 11); // 11 es excluyente, así que el rango es [1, 10]
+            Velocidad = random.Next(1, 2); // 11 es excluyente, así que el rango es [1, 10]
             contadorMovimiento = 0;
             TamañoEstela = tamañoEstela;
             Combustible = 100;
@@ -53,21 +53,41 @@ namespace Tron
         }
         public bool DetectarColisionConEstela(Casilla nuevaPosicion, List<Moto> motos)
         {
+            // Verificar colisión con la propia estela
+            foreach (var nodoEstela in this.Estela)
+            {
+                if (nodoEstela == nuevaPosicion)
+                {   
+                    form.DetenerJuego();
+                    return true; // Colisión con la propia estela detectada
+                }
+            }
+
+            // Verificar colisión con la cabeza o la estela de otras motos
             foreach (var otraMoto in motos)
             {
-                if (otraMoto == this)
-                    continue;
+                
 
+                // Colisión con la cabeza de otra moto
+                if (otraMoto.Head.Value == nuevaPosicion)
+                {
+                    form.DetenerJuego();
+                    return true; // Colisión detectada con la cabeza de otra moto
+                }
+
+                // Colisión con la estela de otra moto
                 foreach (var nodoEstela in otraMoto.Estela)
                 {
                     if (nodoEstela == nuevaPosicion)
                     {
-                        return true; // Colisión detectada
+                        form.DetenerJuego();
+                        return true; // Colisión detectada con la estela de otra moto
                     }
                 }
             }
             return false; // No hay colisión
         }
+
 
         public virtual void Mover(List<Moto> motos)
         {
@@ -92,19 +112,9 @@ namespace Tron
             }
             if (DetectarColisionConEstela(nuevaPosicion, motos))
             {
-                if (esJugador)
-                {
-                    form.DetenerJuego();
-                    juegoTerminado = true; // Actualizar el estado del juego
-                    return;
-                }
-                else
-                {
-                    form.DetenerJuego();
-                    juegoTerminado = true; // Actualizar el estado del juego
-                    return;
-                }
-            
+                form.DetenerJuego();
+                juegoTerminado = true; // Actualizar el estado del juego
+                return;
             }
 
             // Si la nueva posición es inválida (fuera de límites o colisión con pared)

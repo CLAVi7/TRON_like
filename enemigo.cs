@@ -14,9 +14,9 @@ namespace Tron
             CambiarDireccionAleatoria();
             IsAlive=true;
 
-            // Configurar el temporizador para cambiar de dirección cada 3 segundos
+            
             temporizadorCambioDireccion = new System.Windows.Forms.Timer();
-            temporizadorCambioDireccion.Interval = 300; // 3 segundos
+            temporizadorCambioDireccion.Interval = 300000;
             temporizadorCambioDireccion.Tick += (s, e) => CambiarDireccionAleatoria();
             temporizadorCambioDireccion.Start();
         }

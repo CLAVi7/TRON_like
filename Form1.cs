@@ -44,7 +44,7 @@ namespace Tron
 
             Casilla posicionInicialE = matriz[40, 40].Casilla;
             Casilla posicionInicialE2 = matriz[20, 30].Casilla;
-            Casilla posicionInicialE3 = matriz[15, 4].Casilla;
+            Casilla posicionInicialE3 = matriz[15, 6].Casilla;
             enemigo = new Enemigo(posicionInicialE, tamañoEstela: 4, matriz, this, Direction.Right);
             enemigo2 = new Enemigo(posicionInicialE2, tamañoEstela: 4, matriz, this, Direction.Right);
             enemigo3= new Enemigo(posicionInicialE3, tamañoEstela: 4, matriz, this, Direction.Right);
@@ -76,19 +76,17 @@ namespace Tron
         {
             if (!juegoTerminado)
             {
-                moto.Mover(todasLasMotos);
-                foreach (var enemigo in todoslosenemigos.ToList()) // Utiliza una copia de la lista para evitar problemas de modificación durante la iteración
-                {
-                    enemigo.Mover(todasLasMotos);
-                }
+                // Crear una lista combinada de todas las motos (jugador + enemigos)
+                var listaMotos = new List<Moto>(todoslosenemigos);
+                listaMotos.Add(moto); // Añadir la moto del jugador
 
-                // Eliminar enemigos que no están vivos
+                // Mover la moto del jugador y verificar colisiones
+                moto.Mover(listaMotos);
+
+                // Mover cada enemigo y verificar colisiones
                 foreach (var enemigo in todoslosenemigos.ToList())
                 {
-                    if (!enemigo.IsAlive)
-                    {
-                        EliminarEnemigo(enemigo);
-                    }
+                    enemigo.Mover(listaMotos);
                 }
 
                 // Redibujar el formulario
