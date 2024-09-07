@@ -17,6 +17,8 @@ namespace Tron
         private Queue<Item> items = new Queue<Item>(); // Cola de items
         private Random random = new Random();
         private Enemigo enemigo;
+        private Enemigo enemigo2;
+        private Enemigo enemigo3;
         private List<Moto> todasLasMotos;
         private List<Moto> todoslosenemigos;
 
@@ -38,16 +40,22 @@ namespace Tron
 
             // Inicializa la moto en una posición específica
             Casilla posicionInicial = matriz[4, 6].Casilla; // Posición central
-            moto = new Moto(posicionInicial, tamañoEstela: 20, matriz, this, true); // Pasar 'this'
+            moto = new Moto(posicionInicial, tamañoEstela: 4, matriz, this, true); // Pasar 'this'
 
-            Casilla posicionInicialE = matriz[10, 6].Casilla;
+            Casilla posicionInicialE = matriz[40, 40].Casilla;
+            Casilla posicionInicialE2 = matriz[20, 30].Casilla;
+            Casilla posicionInicialE3 = matriz[15, 4].Casilla;
             enemigo = new Enemigo(posicionInicialE, tamañoEstela: 4, matriz, this, Direction.Right);
+            enemigo2 = new Enemigo(posicionInicialE2, tamañoEstela: 4, matriz, this, Direction.Right);
+            enemigo3= new Enemigo(posicionInicialE3, tamañoEstela: 4, matriz, this, Direction.Right);
 
 
             // Configura la dirección inicial de la moto (por ejemplo, hacia la derecha)
             moto.Direccion = Direction.Right;
             todasLasMotos.Add(moto);
             todoslosenemigos.Add(enemigo);
+            todoslosenemigos.Add(enemigo2);
+            todoslosenemigos.Add(enemigo3);
 
             // Configura el Timer para el movimiento de la moto
             timer = new System.Windows.Forms.Timer();

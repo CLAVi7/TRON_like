@@ -29,7 +29,7 @@ namespace Tron
         public Moto(Casilla posicionInicial, int tamañoEstela, Nodo[,] matriz, Form1 form, bool esJugador)
         {
             // Asignar una velocidad aleatoria entre 1 y 10
-            Velocidad = random.Next(1, 2); // 11 es excluyente, así que el rango es [1, 10]
+            Velocidad = random.Next(1, 11); // 11 es excluyente, así que el rango es [1, 10]
             contadorMovimiento = 0;
             TamañoEstela = tamañoEstela;
             Combustible = 100;
