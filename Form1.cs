@@ -71,7 +71,6 @@ namespace Tron
 
             this.ClientSize = new System.Drawing.Size(1200, 700);
         }
-
         private void Timer_Tick(object sender, EventArgs e)
         {
             if (!juegoTerminado)
@@ -84,15 +83,25 @@ namespace Tron
                 moto.Mover(listaMotos);
 
                 // Mover cada enemigo y verificar colisiones
-                foreach (var enemigo in todoslosenemigos.ToList())
+                foreach (var enemigo in todoslosenemigos.ToList()) // Usamos ToList para evitar problemas al modificar la lista dentro del bucle
                 {
-                    enemigo.Mover(listaMotos);
+                    if (enemigo.IsAlive) // Solo mover si el enemigo sigue vivo
+                    {
+                        enemigo.Mover(listaMotos);
+                    }
+                    else
+                    {
+                        // Eliminar enemigo de la lista si ya no está vivo
+                        todoslosenemigos.Remove(enemigo);
+                        enemigo.EliminarEnemigo();
+                    }
                 }
 
                 // Redibujar el formulario
                 this.Invalidate();
             }
         }
+
 
         
 

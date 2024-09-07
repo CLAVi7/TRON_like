@@ -29,7 +29,7 @@ namespace Tron
         public Moto(Casilla posicionInicial, int tamañoEstela, Nodo[,] matriz, Form1 form, bool esJugador)
         {
             // Asignar una velocidad aleatoria entre 1 y 10
-            Velocidad = random.Next(1, 2); // 11 es excluyente, así que el rango es [1, 10]
+            Velocidad = random.Next(1, 11); // 11 es excluyente, así que el rango es [1, 10]
             contadorMovimiento = 0;
             TamañoEstela = tamañoEstela;
             Combustible = 100;
@@ -58,7 +58,7 @@ namespace Tron
             {
                 if (nodoEstela == nuevaPosicion)
                 {   
-                    form.DetenerJuego();
+                    
                     return true; // Colisión con la propia estela detectada
                 }
             }
@@ -71,7 +71,7 @@ namespace Tron
                 // Colisión con la cabeza de otra moto
                 if (otraMoto.Head.Value == nuevaPosicion)
                 {
-                    form.DetenerJuego();
+                    
                     return true; // Colisión detectada con la cabeza de otra moto
                 }
 
@@ -80,7 +80,7 @@ namespace Tron
                 {
                     if (nodoEstela == nuevaPosicion)
                     {
-                        form.DetenerJuego();
+                        
                         return true; // Colisión detectada con la estela de otra moto
                     }
                 }
@@ -232,14 +232,34 @@ namespace Tron
                     }
                 }
             }
-            private void EliminarEnemigo()
+        public void EliminarEnemigo()
         {
-            foreach (var nodo in Estela)
+            
+            IsAlive=false;
+            // Eliminar el enemigo de la lista de enemigos en el formulario
+            if (form != null)
             {
-                nodo.BackColor = Color.Black; // Restaurar el color de las casillas
+                form.EliminarEnemigo(this);
             }
 
+            // Eliminar el enemigo del grid
+            if (Head != null)
+            {
+                Head.Value.BackColor = Color.Black; // Restaurar el color de la casilla en el grid
+            }
+
+            // Limpiar la estela
+            while (Estela.Count > 0)
+            {
+                var nodoAntiguo = Estela.Last;
+                Estela.RemoveLast();
+                nodoAntiguo.Value.BackColor = Color.Black; // Restaurar el color de la casilla en el grid
+            }
             
+            // Eliminar el enemigo de la memoria
+            Estela = null;
+            Head = null;
+            form = null;
         }
         }
         

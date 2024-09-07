@@ -16,22 +16,40 @@ namespace Tron
 
             
             temporizadorCambioDireccion = new System.Windows.Forms.Timer();
-            temporizadorCambioDireccion.Interval = 300000;
+            temporizadorCambioDireccion.Interval = 300;
             temporizadorCambioDireccion.Tick += (s, e) => CambiarDireccionAleatoria();
             temporizadorCambioDireccion.Start();
         }
         public bool DetectarColisionConEstela(Casilla nuevaPosicion, List<Moto> motos)
         {
+            // Verificar colisión con la propia estela
+            foreach (var nodoEstela in this.Estela)
+            {
+                if (nodoEstela == nuevaPosicion)
+                {
+                    return true; // Colisión con la propia estela detectada
+                }
+            }
+
+            // Verificar colisión con la cabeza o la estela de otras motos
             foreach (var otraMoto in motos)
             {
+                // Excluir la propia moto (evitar detectar la moto en sí misma cuando se verifica otras motos)
                 if (otraMoto == this)
                     continue;
 
+                // Colisión con la cabeza de otra moto
+                if (otraMoto.Head.Value == nuevaPosicion)
+                {
+                    return true; // Colisión detectada con la cabeza de otra moto
+                }
+
+                // Colisión con la estela de otra moto
                 foreach (var nodoEstela in otraMoto.Estela)
                 {
                     if (nodoEstela == nuevaPosicion)
                     {
-                        return true; // Colisión detectada
+                        return true; // Colisión detectada con la estela de otra moto
                     }
                 }
             }
@@ -73,12 +91,10 @@ namespace Tron
             contadorMovimiento++;
             if (DetectarColisionConEstela(nuevaPosicion, motos))
             {
-                // Si colisiona con la estela, eliminar al enemigo
-                if (!esJugador)
-                {
-                    EliminarEnemigo();
-                }
+                IsAlive=false;
+                EliminarEnemigo();
                 return;
+               
             }
 
             if (contadorMovimiento >= 5)
