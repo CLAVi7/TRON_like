@@ -42,7 +42,7 @@ public class CeldaCombustible : Item
 
     public override void Aplicar(Moto moto, Nodo[,] matriz)
     {
-        Cantidad = random.Next(40, 100);
+        Cantidad = random.Next(10, 30);
         moto.Combustible += Cantidad;
         Usado = true;
         EliminarYRestaurarColor(moto.form, matriz);
@@ -71,10 +71,13 @@ public class Bomba : Item
 
     public override void Aplicar(Moto moto, Nodo[,] matriz)
     {
-        // Lógica para explosion
-        form.DetenerJuego(); // Asegúrate de que form no sea null aquí
-        Usado = true;
-        EliminarYRestaurarColor(moto.form, matriz);
+        if (moto.esJugador){
+            form.DetenerJuego();
+            Usado = true;
+            EliminarYRestaurarColor(moto.form, matriz);
+
+        }
+     
     }
 }
 }

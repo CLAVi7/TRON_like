@@ -6,6 +6,7 @@ namespace Tron
         private System.Windows.Forms.Timer temporizadorCambioDireccion;
         public bool IsAlive;
         
+        
 
         public Enemigo(Casilla posicionInicial, int tamañoEstela, Nodo[,] matriz, Form1 form, Direction direccionInicial)
             : base(posicionInicial, tamañoEstela, matriz, form, false)
@@ -13,6 +14,7 @@ namespace Tron
             this.direccionActual = direccionInicial; // Asignar la dirección inicial del enemigo
             CambiarDireccionAleatoria();
             IsAlive=true;
+            
 
             
             temporizadorCambioDireccion = new System.Windows.Forms.Timer();
@@ -92,7 +94,7 @@ namespace Tron
             if (DetectarColisionConEstela(nuevaPosicion, motos))
             {
                 IsAlive=false;
-                EliminarEnemigo();
+                
                 return;
                
             }
@@ -101,19 +103,19 @@ namespace Tron
             {
                 Combustible--;
                 contadorMovimiento = 0; // Reiniciar el contador
-                form.CombustibleLabel.Text = $"Combustible: {Combustible}";
+                
             }
 
             if (Combustible <= 0)
             {
-                EliminarEnemigo(); // Eliminar el enemigo si se queda sin combustible
+                EliminarEnemigo2(); // Eliminar el enemigo si se queda sin combustible
                 return;
             }
 
             // Si la nueva posición es inválida (fuera de límites o colisión con pared)
             if (nuevaPosicion == null || nuevaPosicion is Pared)
             {
-                EliminarEnemigo(); // Eliminar si choca con una pared
+                EliminarEnemigo2(); // Eliminar si choca con una pared
                 return;
             }
 
@@ -188,36 +190,6 @@ namespace Tron
             }
 
             return Matriz[y, x].Casilla;
-        }
-
-        public void EliminarEnemigo()
-        {
-            
-            IsAlive=false;
-            // Eliminar el enemigo de la lista de enemigos en el formulario
-            if (form != null)
-            {
-                form.EliminarEnemigo(this);
-            }
-
-            // Eliminar el enemigo del grid
-            if (Head != null)
-            {
-                Head.Value.BackColor = Color.Black; // Restaurar el color de la casilla en el grid
-            }
-
-            // Limpiar la estela
-            while (Estela.Count > 0)
-            {
-                var nodoAntiguo = Estela.Last;
-                Estela.RemoveLast();
-                nodoAntiguo.Value.BackColor = Color.Black; // Restaurar el color de la casilla en el grid
-            }
-            
-            // Eliminar el enemigo de la memoria
-            Estela = null;
-            Head = null;
-            form = null;
         }
 
     }

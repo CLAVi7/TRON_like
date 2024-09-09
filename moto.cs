@@ -23,7 +23,7 @@ namespace Tron
         public bool juegoTerminado;
         private static Random random = new Random(); // Instancia de Random para generar números aleatorios
         public int contadorMovimiento;
-        protected bool esJugador;
+        public bool esJugador;
         public bool IsAlive;
 
         public Moto(Casilla posicionInicial, int tamañoEstela, Nodo[,] matriz, Form1 form, bool esJugador)
@@ -58,7 +58,6 @@ namespace Tron
             {
                 if (nodoEstela == nuevaPosicion)
                 {   
-                    
                     return true; // Colisión con la propia estela detectada
                 }
             }
@@ -232,7 +231,7 @@ namespace Tron
                     }
                 }
             }
-        public void EliminarEnemigo()
+        public void EliminarEnemigo2()
         {
             
             IsAlive=false;

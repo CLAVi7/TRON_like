@@ -63,6 +63,8 @@ namespace Tron
             timer.Tick += Timer_Tick;
             timer.Start();
 
+           
+
             // Configura el Timer para generar items
             itemTimer = new System.Windows.Forms.Timer();
             itemTimer.Interval = 5000; // Intervalo en milisegundos (5 segundos)
@@ -93,7 +95,7 @@ namespace Tron
                     {
                         // Eliminar enemigo de la lista si ya no está vivo
                         todoslosenemigos.Remove(enemigo);
-                        enemigo.EliminarEnemigo();
+                        enemigo.EliminarEnemigo2();
                     }
                 }
 
@@ -193,20 +195,15 @@ namespace Tron
                 new CrecimientoEstela(this),
                 new Bomba(this)
             };
-
             // Selecciona una posición aleatoria en el grid
             int x = random.Next(1, gridSize - 1); // Evita los bordes
             int y = random.Next(1, gridSize - 1);
-
             // Selecciona un item aleatorio
             Item itemAleatorio = itemsDisponibles[random.Next(itemsDisponibles.Count)];
-
             // Coloca el item en el grid y añade a la cola
             ColocarItemEnGrid(x, y, itemAleatorio);
-            items.Enqueue(itemAleatorio);
-            
+            items.Enqueue(itemAleatorio);   
         }
-
         private void ColocarItemEnGrid(int x, int y, Item item)
         {
             // Primero limpia la casilla donde se va a colocar el item, para asegurarse de que no esté oculta
@@ -214,7 +211,6 @@ namespace Tron
             {
                 item.X = x;
                 item.Y = y;
-
                 item.Color = GetColorParaItem(item);
                 matriz[x, y].Casilla.BackColor = item.Color; 
                 // Coloca el item en la posición (x, y) del grid
@@ -224,7 +220,7 @@ namespace Tron
                 item.Left = x * 10;
                 item.Top = y * 10;
                 this.Controls.Add(item);
-                
+
                 this.Invalidate(); 
             }
             
